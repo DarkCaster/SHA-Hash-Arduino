@@ -128,8 +128,6 @@ void sha1(uint8_t *digest, const uint8_t *data, size_t databytes)
 	}
 
 	/* Store binary digest in supplied buffer */
-	if (digest)
-	{
 		for (idx = 0; idx < 5; idx++)
 		{
 			digest[idx * 4 + 0] = (uint8_t) (H[idx] >> 24);
@@ -137,12 +135,4 @@ void sha1(uint8_t *digest, const uint8_t *data, size_t databytes)
 			digest[idx * 4 + 2] = (uint8_t) (H[idx] >> 8);
 			digest[idx * 4 + 3] = (uint8_t) (H[idx]);
 		}
-	}
-
-	/* Store hex version of digest in supplied buffer */
-	/*if (hexdigest)
-	{
-		snprintf (hexdigest, 41, "%08x%08x%08x%08x%08x",
-							H[0],H[1],H[2],H[3],H[4]);
-	}*/
 }
