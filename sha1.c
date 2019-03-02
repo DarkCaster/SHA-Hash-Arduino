@@ -2,21 +2,12 @@
 
 #include "sha1.h"
 
-void sha1(uint8_t *digest, const uint8_t *data, size_t databytes)
-{
 #define SHA1ROTATELEFT(value, bits) (((value) << (bits)) | ((value) >> (32 - (bits))))
 
+uint8_t sha1(uint8_t * const digest, const uint8_t * const data, size_t databytes)
+{
 	uint32_t W[80];
-	uint32_t H[] = {0x67452301,
-	                0xEFCDAB89,
-	                0x98BADCFE,
-	                0x10325476,
-	                0xC3D2E1F0};
-	uint32_t a;
-	uint32_t b;
-	uint32_t c;
-	uint32_t d;
-	uint32_t e;
+	uint32_t H[] = {0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0};
 	uint32_t f = 0;
 	uint32_t k = 0;
 
@@ -43,7 +34,7 @@ void sha1(uint8_t *digest, const uint8_t *data, size_t databytes)
 	datatail[tailbytes - 4] = (uint8_t) (databits >> 24 & 0xFF);
 	datatail[tailbytes - 3] = (uint8_t) (databits >> 16 & 0xFF);
 	datatail[tailbytes - 2] = (uint8_t) (databits >> 8 & 0xFF);
-	datatail[tailbytes - 1] = (uint8_t) (databits >> 0 & 0xFF);
+	datatail[tailbytes - 1] = (uint8_t) (databits & 0xFF);
 
 	/* Process each 512-bit chunk */
 	for (lidx = 0; lidx < loopcount; lidx++)
@@ -52,7 +43,7 @@ void sha1(uint8_t *digest, const uint8_t *data, size_t databytes)
 		memset (W, 0, 80 * sizeof (uint32_t));
 
 		/* Break 512-bit chunk into sixteen 32-bit, big endian words */
-		for (widx = 0; widx <= 15; widx++)
+		for (widx = 0; widx <= 15; ++widx)
 		{
 			wcount = 24;
 
@@ -75,20 +66,16 @@ void sha1(uint8_t *digest, const uint8_t *data, size_t databytes)
 		/* Extend the sixteen 32-bit words into eighty 32-bit words, with potential optimization from:
 			 "Improving the Performance of the Secure Hash Algorithm (SHA-1)" by Max Locktyukhin */
 		for (widx = 16; widx <= 31; widx++)
-		{
 			W[widx] = SHA1ROTATELEFT ((W[widx - 3] ^ W[widx - 8] ^ W[widx - 14] ^ W[widx - 16]), 1);
-		}
 		for (widx = 32; widx <= 79; widx++)
-		{
 			W[widx] = SHA1ROTATELEFT ((W[widx - 6] ^ W[widx - 16] ^ W[widx - 28] ^ W[widx - 32]), 2);
-		}
 
 		/* Main loop */
-		a = H[0];
-		b = H[1];
-		c = H[2];
-		d = H[3];
-		e = H[4];
+		uint32_t a = H[0];
+		uint32_t b = H[1];
+		uint32_t c = H[2];
+		uint32_t d = H[3];
+		uint32_t e = H[4];
 
 		for (idx = 0; idx <= 79; idx++)
 		{
@@ -128,11 +115,12 @@ void sha1(uint8_t *digest, const uint8_t *data, size_t databytes)
 	}
 
 	/* Store binary digest in supplied buffer */
-		for (idx = 0; idx < 5; idx++)
-		{
-			digest[idx * 4 + 0] = (uint8_t) (H[idx] >> 24);
-			digest[idx * 4 + 1] = (uint8_t) (H[idx] >> 16);
-			digest[idx * 4 + 2] = (uint8_t) (H[idx] >> 8);
-			digest[idx * 4 + 3] = (uint8_t) (H[idx]);
-		}
+	for (idx = 0; idx < 5; idx++)
+	{
+		digest[idx * 4 + 0] = (uint8_t) (H[idx] >> 24);
+		digest[idx * 4 + 1] = (uint8_t) (H[idx] >> 16);
+		digest[idx * 4 + 2] = (uint8_t) (H[idx] >> 8);
+		digest[idx * 4 + 3] = (uint8_t) (H[idx]);
+	}
+	return 20;
 }
