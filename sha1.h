@@ -7,6 +7,8 @@
 extern "C"{
 #endif
 
+#define SHA1_HASHSIZE 20
+
 uint8_t sha1(uint8_t * const digest, const uint8_t *data, const size_t databytes);
 
 #ifdef __cplusplus
