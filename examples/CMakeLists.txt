@@ -42,4 +42,4 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 #test util
-add_executable(HashTestUtil main.cpp ../sha1.c ../hmac.c)
+add_executable(HashTestUtil main.cpp ../sha1.c ../hmac.c ../hmacsha1.c)
