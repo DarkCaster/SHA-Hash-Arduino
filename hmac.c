@@ -1,6 +1,6 @@
 #include "hmac.h"
 
-uint8_t hmac(uint8_t * key, size_t keyLen, uint8_t * const opBuff, size_t dataLen, hashfunc_ptr const hashFunc, const uint8_t hashSize, const uint8_t blockSize)
+uint8_t hmac(uint8_t * key, size_t keyLen, uint8_t * const opBuff, size_t dataLen, hash_func_ptr const hashFunc, const uint8_t hashSize, const uint8_t blockSize)
 {
 	//TODO: current implementation may not allow hashSize>blockSize
 	//TODO: recheck, may-be hashSize>blockSize situations is not valid at all for HMAC algo
